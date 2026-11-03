@@ -5,3 +5,4 @@ backend_atto_cmssw/
 *.pdf
 x509up*
 *.root
+*__pycache__*

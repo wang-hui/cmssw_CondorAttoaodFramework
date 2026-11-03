@@ -60,8 +60,8 @@ else: raise SystemExit('ERROR: Unrecognized site: not hexcms, cmslpc, or lxplus'
 
 # import condor modules
 try:
-  import classad
-  import htcondor
+  import classad2 as classad
+  import htcondor2 as htcondor
 except ImportError as err:
   if site == 'hexcms':
     raise err
@@ -478,7 +478,8 @@ for i in range(len(infile_tranches)):
   job_dir = job_dir + suffix
   sub = htcondor.Submit()
   sub['executable'] = helper_dir+'/'+executable if not args.noPayload else helper_dir+'/'+executable_fast
-  sub['arguments'] = mode+' '+finalfile_filename+' $(GLOBAL_PROC) '+griduser_id+' '+datamc+' '+args.year+' '+str(args.lumi)+' '+args.filter+' '+args.datasetname+' '+str(args.xs)+' '+args.branches+' '+args.input+' '+str(args.cut)+' '+args.photon+' '+site+' '+backend_option+' '+str(args.phislice)+' '+str(args.lumimask)+' '+str(args.m2pgen)
+  #sub['arguments'] = mode+' '+finalfile_filename+' $(GLOBAL_PROC) '+griduser_id+' '+datamc+' '+args.year+' '+str(args.lumi)+' '+args.filter+' '+args.datasetname+' '+str(args.xs)+' '+args.branches+' '+args.input+' '+str(args.cut)+' '+args.photon+' '+site+' '+backend_option+' '+str(args.phislice)+' '+str(args.lumimask)+' '+str(args.m2pgen)
+  sub['arguments'] = mode+' '+finalfile_filename+' $(GLOBAL_PROC) '+griduser_id+' '+datamc+' '+args.year+' '+str(args.lumi)+' '+args.filter+' '+args.datasetname+' '+str(args.xs)+' '+os.path.basename(args.branches)+' '+args.input+' '+str(args.cut)+' '+args.photon+' '+site+' '+backend_option+' '+str(args.phislice)+' '+str(args.lumimask)+' '+str(args.m2pgen)
   sub['should_transfer_files'] = 'YES'
   sub['+JobFlavor'] = 'longlunch'
   sub['Notification'] = 'Never'
@@ -554,7 +555,7 @@ if site == 'cmslpc':
   collector = htcondor.Collector()
   coll_query = collector.query(htcondor.AdTypes.Schedd, \
   constraint='FERMIHTC_DRAIN_LPCSCHEDD=?=FALSE && FERMIHTC_SCHEDD_TYPE=?="CMSLPC"',
-  projection=["Name", "MyAddress"]
+  projection=["Name", "MyAddress", "CondorVersion"]
   )
   schedd_ad = coll_query[0]
 schedd = htcondor.Schedd(schedd_ad)

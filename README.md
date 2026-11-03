@@ -7,6 +7,7 @@ Region 2: loose
 Region 0: neither
 
 ### running
+get a copy of backend_atto_cmssw/CMSSW_10_6_20.tgz and backend_histo_cmssw/CMSSW_10_6_20.tgz
 use condor_submit.py
 
 ### to work on backend
@@ -15,8 +16,6 @@ use condor_submit.py
 backend_plotting_get.sh
 ```
 2. change code and run interactively, under CMSSW_10_6_20/src/PhysicsTools/NanoAODTools/python/fmk_plotting directory
-```
-```
 3. git push
 4. copy tarball to cmslpc for use with next job
 ```
