@@ -1,14 +1,26 @@
-runs in a conda environment created to these specs:
-$ conda create -n pyroot -c conda-forge root "python<3"
-which will provide python3 at <3.11 and python at 2.7
-
 Region 1: tight
+
 Region 2: loose
+
 Region 0: neither
 
 ### running
 get a copy of backend_atto_cmssw/CMSSW_10_6_20.tgz and backend_histo_cmssw/CMSSW_10_6_20.tgz
-use condor_submit.py
+
+make sure scramv1 b ProjectRename runs in cmssw-el7 container
+```
+mkdir backend_atto_cmssw
+cd backend_atto_cmssw
+cp /home/chiarito/work/atto_framework_apr22restart/backend_atto_cmssw/CMSSW_10_6_20.tgz .
+#cmssw-el7 at LPC
+cmssw-el7 -p --bind `readlink $HOME` --bind `readlink -f ${HOME}/nobackup/` --bind /uscms_data --bind /uscmst1b_scratch --bind /cvmfs -- /bin/bash -l
+#cmssw-el7 at HEX
+source /home/joey/alma8_setups/setup_cmssw-el7_apptainer.sh
+scramv1 b ProjectRename
+```
+Do the same for backend_histo_cmssw
+
+Submit jobs with condor_submit.py
 
 ### to work on backend
 1. get a copy

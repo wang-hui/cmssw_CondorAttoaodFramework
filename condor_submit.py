@@ -389,9 +389,8 @@ f_dir_string = f_tag.replace('.','p')+"-"+f_commits+"-"+f_hash[-4:]
 base = args.output
 if base[-1] == '/': base = base[:-1]
 
-if mode == 'atto' and not args.input_dataset \
+if mode in ('atto', 'histo') and not args.input_dataset \
    and not input_dir_name.endswith(('.txt', '.root')):
-
   # Use input directory name for nano -> atto
   output_path = os.path.join(base, input_dir_name)
 
