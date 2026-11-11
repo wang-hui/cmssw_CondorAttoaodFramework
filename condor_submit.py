@@ -133,7 +133,7 @@ histo_args.add_argument("--phislice", default=False, action="store_true",
 help="turn on phi binned histograms for bkg analysis")
 histo_args.add_argument("--photon", default="CBL220", metavar='CHOICE',
 help="choice for photon: HPID, CBL (default), followed by pT cut (e.g. CBL220)")
-histo_args.add_argument("--m2pgen", default=None, metavar='MASS',
+histo_args.add_argument("--m2pgen", default=None, type=float, metavar='MASS',
 help="gen omega mass in GeV, only needed for sigRes")
 #histo_args.add_argument("--phislice", default=0,
 #help="parameter for slicing in Phi mass")
@@ -233,6 +233,30 @@ if (args.input).startswith('Job_') or (args.input).startswith('Jobs_'):
   output_path = job.output
   atto_job_dir = args.input
   args.input = output_path
+
+# Get input directory name
+input_dir_name = os.path.basename(os.path.normpath(args.input))
+
+# Infer Omega mass for histo jobs
+if mode == 'histo' and args.m2pgen is None:
+  mass_match = re.search(r'Omega(.+?)_UL', input_dir_name)
+
+  if mass_match:
+    mass_string = mass_match.group(1).replace('p', '.')
+    try:
+      args.m2pgen = float(mass_string)
+    except ValueError:
+      raise SystemExit(
+        "ERROR: Could not interpret Omega mass from input directory: "
+        + input_dir_name + ". Please provide --m2pgen explicitly."
+      )
+
+  elif datamc == 'sigRes':
+    raise SystemExit(
+      "ERROR: Could not infer --m2pgen from input directory: "
+      + input_dir_name + ". Please provide --m2pgen explicitly."
+    )
+
 if args.input_local == False and args.input_cmslpc == False and args.input_dataset == False:
   input_not_set = True
 if input_not_set and site == "hexcms": args.input_local = True
@@ -364,8 +388,18 @@ f_dir_string = f_tag.replace('.','p')+"-"+f_commits+"-"+f_hash[-4:]
 # create output area
 base = args.output
 if base[-1] == '/': base = base[:-1]
-timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-output_path = base+'/'+timestamp+'/'+f_dir_string
+
+if mode == 'atto' and not args.input_dataset \
+   and not input_dir_name.endswith(('.txt', '.root')):
+
+  # Use input directory name for nano -> atto
+  output_path = os.path.join(base, input_dir_name)
+
+else:
+  # Keep original naming convention for other cases
+  timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+  output_path = os.path.join(base, timestamp, f_dir_string)
+
 if args.output_local:
   if site == "cmslpc": raise SystemExit('ERROR: Cannot write output to local filesystem when running on cmslpc: functionality not implemented!')
   if not os.path.isdir(output_path):

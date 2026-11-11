@@ -1,2 +1,2 @@
-./condor_submit.py atto /store/user/lpcrutgers/huiwang/pseudoaxions/nano/2026-10-25-02-15-43/fv1p9-33-0f97_bv1p8-7-2db5 /store/user/lpcrutgers/huiwang/pseudoaxions/atto --sigRes --m2pgen 1000 -d nano2atto -a main -f -y UL16
-./condor_submit.py histo /store/user/lpcrutgers/huiwang/pseudoaxions/atto/2026-10-31-21-47-23/v1p0-177-5901/ /store/user/lpcrutgers/huiwang/pseudoaxions/histo --sigRes --m2pgen 1000 -d atto2histo -a main -p sigeff -f -y UL16
+./condor_submit.py atto /store/user/lpcrutgers/huiwang/pseudoaxions/nano/EtaPrime_Phi1000Omega0p75_UL16_preVFP /store/user/lpcrutgers/huiwang/pseudoaxions/atto --sigRes -d nano2atto -a main -f -y UL16 --numJobs 1
+./condor_submit.py histo /store/user/lpcrutgers/huiwang/pseudoaxions/atto/EtaPrime_Phi1000Omega0p75_UL16_preVFP /store/user/lpcrutgers/huiwang/pseudoaxions/histo --sigRes  -d atto2histo -a main -p sanity --photonchoice CBL -f -y UL16
